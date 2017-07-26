@@ -13,7 +13,7 @@
     console.log(set2); // Set { 1, 2, 3, 4, 5 }
 ````
 
-#####函数
+#####方法
 * has() 方法来测试某个值是否存在于 Set 中：
 ````ecmascript 6
     let set = new Set([1,"2"]);

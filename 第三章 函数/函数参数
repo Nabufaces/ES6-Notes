@@ -18,7 +18,7 @@ function makeRequest(url, timeout = 2000, callback = function() {}) {
 ````
 
 ## 参数默认值如何影响 arguments 对象
-1. ES5 的非严格模式下， arguments 对象总是会被更新以反映出具名参数的变化：
+* ES5 的非严格模式下， arguments 对象总是会被更新以反映出具名参数的变化：
 ````ecmascript 6
     function mixArgs(first, second) {
         console.log(first === arguments[0]);    //true
@@ -28,7 +28,7 @@ function makeRequest(url, timeout = 2000, callback = function() {}) {
     mixArgs("a", "b");
 ````
 
-2. 在 ES5 的严格模式下，arguments 对象不再反映出具名参数的变化：
+* 在 ES5 的严格模式下，arguments 对象不再反映出具名参数的变化：
 ````ecmascript 6
     function mixArgs(first, second) {
         "use strict";
@@ -40,7 +40,7 @@ function makeRequest(url, timeout = 2000, callback = function() {}) {
     mixArgs("a", "b");
 ````
 
-3. 在使用 ES6 参数默认值的函数中， arguments 对象的表现总是会与 ES5 的严格模式一致
+* 在使用 ES6 参数默认值的函数中， arguments 对象的表现总是会与 ES5 的严格模式一致
 ````ecmascript 6
 // 非严格模式
     function mixArgs(first, second = "b") {
@@ -93,13 +93,13 @@ function makeRequest(url, timeout = 2000, callback = function() {}) {
 
 ## 扩展运算符
 * 扩展运算符则允许将一个数组分割，并将各个项作为分离的参数传给函数
-1. ES5：
+* ES5：
 ````javascript
     var values = [25, 50, 75, 100];
     console.log(Math.max.apply(Math, values)); // 100
 ````
 
-2. ES6：
+* ES6：
 ````ecmascript 6
     let values = [25, 50, 75, 100];
     // 等价于 console.log(Math.max(25, 50, 75, 100));

@@ -1,0 +1,110 @@
+## ES6 中的参数默认值
+````ecmascript 6
+function makeRequest(url, timeout = 2000, callback = function() {}) {
+    /* 此函数只要求第一个参数始终要被传递。其余两个参数则都有默认值，这使得函数体更为小
+       巧，因为不需要再添加更多代码来检查缺失的参数值。*/
+}
+````
+如果使用全部三个参数来调用 makeRequest() ，那么默认值将不会被使用，例如：
+````ecmascript 6
+    // 使用默认的 timeout 与 callback
+    makeRequest("/foo");
+    // 使用默认的 callback
+    makeRequest("/foo", 500);
+    // 不使用默认值
+    makeRequest("/foo", 500, function(body) {
+        doSomething(body);
+    });
+````
+
+## 参数默认值如何影响 arguments 对象
+1. ES5 的非严格模式下， arguments 对象总是会被更新以反映出具名参数的变化：
+````ecmascript 6
+    function mixArgs(first, second) {
+        console.log(first === arguments[0]);    //true
+        first = "c";
+        console.log(first === arguments[0]);    //true
+    }
+    mixArgs("a", "b");
+````
+
+2. 在 ES5 的严格模式下，arguments 对象不再反映出具名参数的变化：
+````ecmascript 6
+    function mixArgs(first, second) {
+        "use strict";
+        console.log(first === arguments[0]);    //true
+        first = "c";
+        console.log(first === arguments[0]);    //false
+        console.log(first+" "+arguments[0]);    //c a
+    }
+    mixArgs("a", "b");
+````
+
+3. 在使用 ES6 参数默认值的函数中， arguments 对象的表现总是会与 ES5 的严格模式一致
+````ecmascript 6
+// 非严格模式
+    function mixArgs(first, second = "b") {
+        console.log(arguments.length);  
+        /* arguments.length 的值为 1 ，因为只给 mixArgs() 传递了一个参数。这也意味着
+           arguments[1] 的值是 undefined */
+        console.log(first === arguments[0]);    //true
+        console.log(second === arguments[1]);   //false
+        first = "c";
+        second = "d";
+        console.log(first === arguments[0]);    //false
+        console.log(second === arguments[1]);   //false
+    }
+    mixArgs("a");
+````
+
+## 参数默认值表达式
+````ecmascript 6
+    let value = 5;
+    function getValue() {
+        return value++;
+    }
+    function add(first, second = getValue()) {
+        return first + second;
+    }
+    console.log(add(1, 1)); // 2
+    //未提供第二个参数时， getValue() 函数才会被调用
+    console.log(add(1)); // 6
+    console.log(add(1)); // 7
+````
+
+* 可以将前面的参数作为后面参数的默认值，这里有个例子：
+````ecmascript 6
+    function add(first, second = first) {
+        return first + second;
+    }
+    console.log(add(1, 1)); // 2
+    console.log(add(1)); // 2
+````
+
+## ES6 剩余参数
+* 剩余参数（ rest parameter ）由三个点（ ... ）与一个紧跟着的具名参数指定，它会是包
+  含传递给函数的其余参数的一个数组
+````ecmascript 6
+    function getInfo(msg, ...rest) {
+        console.log(rest);  // [ 'Nabufaces', ' Morning!' ]
+    }
+    getInfo("hello", "Nabufaces", " Morning!");
+````
+
+## 扩展运算符
+* 扩展运算符则允许将一个数组分割，并将各个项作为分离的参数传给函数
+1. ES5：
+````javascript
+    var values = [25, 50, 75, 100];
+    console.log(Math.max.apply(Math, values)); // 100
+````
+
+2. ES6：
+````ecmascript 6
+    let values = [25, 50, 75, 100];
+    // 等价于 console.log(Math.max(25, 50, 75, 100));
+    console.log(Math.max(...values)); // 100
+````
+
+
+

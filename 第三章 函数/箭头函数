@@ -1,0 +1,63 @@
+## 箭头函数特性
+* 没有this、super、arguments，也没有new.target绑定：this、super、arguments以及函数内部的 new.target 的值由所在的、最靠近的非箭头函数来决定
+* 不能被使用new调用：箭头函数没有[[Construct]]方法，因此不能被用为构造函数，使用 new 调用箭头函数会抛出错误。
+* 没有原型：既然不能对箭头函数使用new，那么它也不需要原型，也就是没有prototype属性。
+* 不能更改this：this的值在函数内部不能被修改，在函数的整个生命周期内其值会保持不变。
+* 没有arguments对象：既然箭头函数没有arguments绑定，你必须依赖于具名参数或剩余参数来访问函数的参数。
+* 不允许重复的具名参数：箭头函数不允许拥有重复的具名参数，无论是否在严格模式下；而相对来说，传统函数只有在严格模式下才禁止这种重复。
+
+## 箭头函数语法
+````ecmascript 6
+    const sum = (num1, num2) => num1 + num2;
+    // 有效等价于：
+    const  sum = (num1, num2) => {
+        return num1 + num2;  
+    };
+    // 有效等价于：
+    const sum = function(num1, num2) {
+        return num1 + num2;
+    };
+````
+
+## 没有 this 绑定
+````javascript
+    var PageHandler = {
+        id: "123456",
+        init: function() {
+            document.addEventListener("click", function(event) {
+                this.doSomething(event.type); // 错误
+            }, false);
+            /* 调用 this.doSomething() 被中断是因为 this 是对事件目标对象（在此案例中就是
+            document ）的一个引用，而不是被绑定到 PageHandler 上 */
+        },
+        doSomething: function(type) {
+            console.log("Handling " + type + " for " + this.id);
+        }
+    };
+````
+修正：
+````javascript
+    var PageHandler = {
+        id: "123456",
+        init: function() {
+            document.addEventListener("click", (function(event) {
+                this.doSomething(event.type); 
+            }).bind(this), false);
+        },
+        doSomething: function(type) {
+            console.log("Handling " + type + " for " + this.id);
+        }
+    };
+````
+改用ES6：
+````ecmascript 6
+    const PageHandler = {
+        id: "123456",
+        init: function() {
+            document.addEventListener("click", event=>this.doSomething(event.type), false);
+        },
+        doSomething: function(type) {
+            console.log("Handling " + type + " for " + this.id);
+        }
+    };
+````

@@ -1,0 +1,38 @@
+## 正则表达式 u 标志
+* 当一个正则表达式设置了 u 标志时，它的工作模式将切换到针对字符，而不是针对码元
+
+## 识别子字符串的方法
+* includes() ，在给定文本存在于字符串中的任意位置时会返回 true ，否则返回 false ；
+* startsWith() ，在给定文本出现在字符串起始处时返回 true ，否则返回 false ；
+* endsWith() ，在给定文本出现在字符串结尾处时返回 true ，否则返回 false 。
+* 每个方法都接受两个参数：需要搜索的文本，以及可选的搜索起始位置索引
+
+## repeat() 方法
+ES6 还为字符串添加了一个repeat()方法，它接受一个参数作为字符串的重复次数，返回一个将初始字符串重复指定次数的新字符串。例如：
+````ecmascript 6
+    console.log("hello".repeat(2)); // "hellohello"
+    // indent 使用了一定数量的空格，格式化
+    let indent = " ".repeat(4),
+        indentLevel = 0;
+    // 每当你增加缩进
+    const newIndent = indent.repeat(++indentLevel);
+````
+
+## 模板字面量
+* 使用反引号（ ` ）来包裹普通字符串，而不是用双引号或单引号。参考以下例子：
+````ecmascript 6
+    let message = `Hello World`;
+````
+
+## 制造替换位
+* 替换位由起始的${与结束的}来界定，之间允许放入任意的JS表达式，例如可以轻易嵌入计算、函数调用，等等
+````ecmascript 6
+    let name = "Nicholas",
+    message = `Hello, ${name}.`;
+    console.log(message); // "Hello, Nicholas."
+    
+    let count = 10,
+        price = 0.25,
+    message = `${count} items cost ${(count * price).toFixed(2)}.`;
+    console.log(message); // "10 items cost 2.50."
+````

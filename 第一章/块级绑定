@@ -1,0 +1,130 @@
+## ES5
+* var 声明与变量提升
+    
+    * 使用var关键字声明的变量，无论其实际声明位置在何处，都会被视为**声明于所在函数的顶部**（如果声明不在任意函数内，则视为在全局作用域的顶部）。这就是所谓的变量提升（
+hoisting ）。为了说明变量提升的含义，请参考如下函数定义：
+
+````javascript
+    function getValue(condition) {
+        if (condition) {
+            var value = "blue";
+            return value;
+        } else {
+            // value 在此处可访问，值为 undefined
+            return null;
+        }
+        // value 在此处可访问，值为 undefined
+    }
+````
+
+## 块级声明
+
+#### let声明
+* let声明会将变量的作用域限制在**当前代码块**中。由于let声明并不会被提升到当前代码块的顶部，因此你需要手动将let声明放置到顶部，以便让变量在整个代码块内部可用
+
+````ecmascript 6
+    function getValue(condition) {
+        if (condition) {
+            let value = "blue";
+            return value;
+        } else {
+            // value 在此处不可用
+            return null;
+        }
+        // value 在此处不可用
+    }
+````
+
+#### 禁止重复声明
+````ecmascript 6
+    var count = 30;
+    // 语法错误
+    let count = 40;
+````
+````ecmascript 6
+    var count = 30;
+    // 不会抛出错误
+    if (condition) {
+        let count = 40;
+    }
+````
+
+#### const常量声明
+* 使用const声明的变量会被认为是常量（constant），意味着它们的值在被设置完成后就不能再被改变。正因为如此，所有的**const变量都需要在声明时进行初始化**，常量声明与let声明一样，**都是块级声明**。
+* 使用 const 声明对象
+````ecmascript 6
+    const person = {
+        name: "Nicholas"
+    };
+    // 工作正常
+    person.name = "Greg";
+    // 抛出错误
+    person = {
+        name: "Greg"
+    };
+````
+
+#### 暂时性死区
+* 使用let或const声明的变量，在达到声明处之前都是无法访问的，试图访问会导致一个引用错误
+````ecmascript 6
+    if (condition) {
+        console.log(typeof value); // 引用错误
+        let value = "blue";
+    }
+````
+````ecmascript 6
+    console.log(typeof value); // "undefined"
+    if (condition) {
+        let value = "blue";
+    }
+    /* 当 typeof 运算符被使用时， value 并没有在暂时性死区内，因为这发生在定义 value 变量的代码块外部。这意味着此时并没有绑定 value 变量，而 typeof 仅单纯返回了
+    "undefined" 。 */
+````
+
+## 循环中的块级绑定
+````javascript
+    for (var i = 0; i < 10; i++) {
+        process(items[i]);
+     }
+    // i 在此处仍然可被访问
+    console.log(i); // 10
+````
+````ecmascript 6
+    for (let i = 0; i < 10; i++) {
+        process(items[i]);
+    }
+    // i 在此处不可访问，抛出错误
+    console.log(i);
+````
+````ecmascript 6
+    var funcs = [],
+        object = {
+            a: true,
+            b: true,
+            c: true
+        };
+    // 不会导致错误
+    for (const key in object) {
+        funcs.push(function() {
+            console.log(key);
+        });
+    }
+    funcs.forEach(function(func) {
+        func(); // 依次输出 "a"、 "b"、 "c"
+    });
+````
+
+## 全局块级绑定
+````ecmascript 6
+    // 在浏览器中
+    var RegExp = "Hello!";
+    console.log(window.RegExp); // "Hello!"
+    
+    let RegExp = "Hello!";
+    console.log(RegExp); // "Hello!"
+    console.log(window.RegExp === RegExp); // false
+    
+    const ncz = "Hi!";
+    console.log(ncz); // "Hi!"
+    console.log("ncz" in window); // false
+````

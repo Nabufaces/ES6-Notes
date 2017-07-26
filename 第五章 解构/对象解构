@@ -1,0 +1,40 @@
+## 对象解构
+对象解构语法在赋值语句的左侧使用了对象字面量，例如：
+````ecmascript 6
+    let node = {
+        type: "Identifier",
+        name: "foo"
+    };
+    let { type, name } = node;
+    console.log(type); // "Identifier"
+    console.log(name); // "foo"
+````
+* 当你使用解构赋值语句时，如果所指定的本地变量在对象中没有找到同名属性，那么该变量会被赋值为 undefined
+
+##### 赋值给不同的本地变量名
+````ecmascript 6
+    let node = {
+        type: "Identifier",
+        name: "foo"
+    };
+    let { type: localType, name: localName } = node;
+    console.log(localType); // "Identifier"
+    console.log(localName); // "foo"
+````
+
+##### 嵌套的对象解构
+````ecmascript 6
+    let node = {
+        type: "Identifier",
+        name: "foo",
+        loc: {
+            start: {
+                line: 1,
+                column: 1
+            }
+        }
+    };
+    let { loc: { start }} = node;
+    console.log(start.line); // 1
+    console.log(start.column); // 1
+````

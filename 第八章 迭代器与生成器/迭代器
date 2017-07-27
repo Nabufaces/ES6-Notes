@@ -1,0 +1,64 @@
+## 迭代器
+迭代器是被设计专用于迭代的对象，带有特定接口。所有的迭代器对象都拥有 next() 方法，
+会返回一个结果对象。该结果对象有两个属性：对应下一个值的 value ，以及一个布尔类
+型的 done ，其值为 true 时表示没有更多值可供使用。迭代器持有一个指向集合位置的
+内部指针，每当调用了 next() 方法，迭代器就会返回相应的下一个值。
+
+#### 可迭代对象与 for-of 循环
+* 可迭代对象（ iterable ）是包含 Symbol.iterator 属性的对象。这个 Symbol.iterator 
+  知名符号定义了为指定对象返回迭代器的函数。在 ES6 中，所有的集合对象（数组、
+   Set 与 Map ）以及字符串都是可迭代对象，因此它们都被指定了默认的迭代器。
+   可迭代对象被设计用于与 ES 新增的 for-of 循环配合使用。生成器创建的所有迭代器
+   都是可迭代对象，因为生成器默认就会为 Symbol.iterator 属性赋值。
+   
+* for-of 循环在循环每次执行时会调用可迭代对象的 next() 方法，并将结果对象的 value
+  值存储在一个变量上。循环过程会持续到结果对象的 done 属性变成 true 为止。
+````ecmascript 6
+    let values = [1, 2, 3];
+    for (let num of values) {
+        console.log(num);  //1 2 3
+    }
+    /* 这个 for-of 循环首先调用了 values 数组的 Symbol.iterator 方法，获取了一个迭代器
+       （对 Symbol.iterator 的调用发生在 JS 引擎后台）。接下来 iterator.next() 被调用，迭
+       代器结果对象的 value 属性被读出并放入了 num 变量。 num 变量的值开始为 1 ，接下来
+       是 2 ，最后变成 3 。当结果对象的 done 变成 true ，循环就退出了，因此 num 绝不会被
+       赋值为 undefined 。 */
+````
+你可以使用 Symbol.iterator 来访问对象上的默认迭代器：
+````ecmascript 6
+    let values = [1, 2];
+    let iterator = values[Symbol.iterator]();
+    console.log(iterator.next()); // "{ value: 1, done: false }"
+    console.log(iterator.next()); // "{ value: 2, done: false }"
+    console.log(iterator.next()); // "{ value: undefined, done: true }"
+````
+
+#### 集合的迭代器
+* entries() ：返回一个包含键值对的迭代器；
+* values() ：返回一个包含集合中的值的迭代器；
+* keys() ：返回一个包含集合中的键的迭代器。
+````ecmascript 6
+    let colors = [ "red", "green", "blue" ];
+    let tracking = new Set([1234, 5678, 9012]);
+    let data = new Map();
+    data.set("title", "Understanding ES6");
+    data.set("format", "ebook");
+    for (let entry of colors.entries()) {
+        console.log(entry);
+    };
+    for (let entry of tracking.entries()) {
+        console.log(entry);
+    };
+    for (let entry of data.entries()) {
+        console.log(entry);
+    };
+    // 输出：
+    /* [0, "red"]
+    [1, "green"]
+    [2, "blue"]
+    [1234, 1234]
+    [5678, 5678]
+    [9012, 9012]
+    ["title", "Understanding ES6"]
+    ["format", "ebook"] */
+````

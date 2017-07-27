@@ -1,0 +1,59 @@
+## 生成器
+生成器（ generator ）是能返回一个迭代器的函数。生成器函数由放在 function 关键字之后的一个星号（ * ）来表示，并能使用新的 yield 关键字。将星号紧跟 function 
+关键字之后，yield 关键字指定了迭代器在被 next() 方法调用时应当按顺序返回的值， 正如下例： 
+````ecmascript 6
+    // 生成器
+    function *createIterator() {
+        yield 1;
+        yield 2;
+        yield 3;
+    }
+    // 生成器能像正规函数那样被调用，但会返回一个迭代器
+    let iterator = createIterator();
+    console.log(iterator.next().value); // 1
+    console.log(iterator.next().value); // 2
+    console.log(iterator.next().value); // 3
+````
+* 生成器函数可能会在每个 yield 语句后停止执行。
+* yield关键字可以和值或是表达式一起使用，因此你可以通过生成器给迭代器添加项目，
+    而不是机械化地将项目一个个列出： 
+````ecmascript 6
+    function *createIterator(items) {
+        for (let i = 0; i < items.length; i++) {
+            yield items[i];
+        }
+    }
+    let iterator = createIterator([1, 2, 3]);
+    console.log(iterator.next()); // "{ value: 1, done: false }"
+    console.log(iterator.next()); // "{ value: 2, done: false }"
+    console.log(iterator.next()); // "{ value: 3, done: false }"
+    // 之后的所有调用
+    console.log(iterator.next()); // "{ value: undefined, done: true }"
+````
+* yield 关键字只能用在生成器内部，用于其他任意位置都是语法错误，即使在生成器内
+    部的函数中也不行。
+* 不能将箭头函数创建为生成器。
+
+#### 生成器委托
+````ecmascript 6
+    function *createNumberIterator() {
+        yield 1;
+        yield 2;
+    }
+    function *createColorIterator() {
+        yield "red";
+        yield "green";
+    }
+    function *createCombinedIterator() {
+        yield *createNumberIterator();
+        yield *createColorIterator();
+        yield true;
+    }
+    let iterator = createCombinedIterator();
+    console.log(iterator.next()); // "{ value: 1, done: false }"
+    console.log(iterator.next()); // "{ value: 2, done: false }"
+    console.log(iterator.next()); // "{ value: "red", done: false }"
+    console.log(iterator.next()); // "{ value: "green", done: false }"
+    console.log(iterator.next()); // "{ value: true, done: false }"
+    console.log(iterator.next()); // "{ value: undefined, done: true }"
+````

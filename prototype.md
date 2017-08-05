@@ -79,6 +79,7 @@
     console.log(obj.name); // name
 ```
 所以原型对象是通过Object构造函数生成的，结合之前所讲,实例的__proto__指向构造函数的prototype,所以我们再更新下关系图：
+
 ![](http://wx2.sinaimg.cn/mw690/6941baebly1ff9jttpwsej20ge0d9js0.jpg)
 
 ## 原型链

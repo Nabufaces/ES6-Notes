@@ -2,34 +2,34 @@
 
 #### ES5的仿类结构
 ```javascript
-    function PersonType(name) {
-        this.name = name;
-    }
-    PersonType.prototype.sayName = function() {
-        console.log(this.name);
-    };
-    let person = new PersonType("Nicholas");
-    person.sayName(); // 输出 "Nicholas"
+function PersonType(name) {
+    this.name = name;
+}
+PersonType.prototype.sayName = function() {
+    console.log(this.name);
+};
+let person = new PersonType("Nicholas");
+person.sayName(); // 输出 "Nicholas"
 ```
 
 #### ES6基本类声明
 ```javascript
-    class PersonClass {
-        // 等价于 PersonType 构造器
-        constructor(name) {
-            this.name = name;
-        }
-        // 等价于 PersonType.prototype.sayName
-        sayName() {
-            console.log(this.name);
-        }
+class PersonClass {
+    // 等价于 PersonType 构造器
+    constructor(name) {
+        this.name = name;
     }
-    let person = new PersonClass("Nicholas");
-    person.sayName(); // 输出 "Nicholas"
-    console.log(person instanceof PersonClass); // true
-    console.log(person instanceof Object); // true
-    console.log(typeof PersonClass); // "function"
-    console.log(typeof PersonClass.prototype.sayName); // "function"
+    // 等价于 PersonType.prototype.sayName
+    sayName() {
+        console.log(this.name);
+    }
+}
+let person = new PersonClass("Nicholas");
+person.sayName(); // 输出 "Nicholas"
+console.log(person instanceof PersonClass); // true
+console.log(person instanceof Object); // true
+console.log(typeof PersonClass); // "function"
+console.log(typeof PersonClass.prototype.sayName); // "function"
 ```
 
 * 注意：
@@ -177,26 +177,26 @@ var obj = new Square(3); // 输出 false
 - 如果子类没有定义`constructor`方法，这个方法会被默认添加。
 - 在子类的构造函数中，只有调用`super`之后，才可以使用`this`关键字。
 ```javascript
-    class Rectangle {
-        constructor(length, width) {
-            this.length = length;
-            this.width = width;
-        }
-        getArea() {
-            return this.length * this.width;
-        }
+class Rectangle {
+    constructor(length, width) {
+        this.length = length;
+        this.width = width;
     }
-    class Square extends Rectangle {
-        constructor(length) {
-            // 与Rectangle.call(this, length, length)相同
-            // 调用父类的constructor(length, width)
-            super(length, length);
-        }
+    getArea() {
+        return this.length * this.width;
     }
-    var square = new Square(3);
-    console.log(square.getArea()); // 9
-    console.log(square instanceof Square); // true
-    console.log(square instanceof Rectangle); // true
+}
+class Square extends Rectangle {
+    constructor(length) {
+        // 与Rectangle.call(this, length, length)相同
+        // 调用父类的constructor(length, width)
+        super(length, length);
+    }
+}
+var square = new Square(3);
+console.log(square.getArea()); // 9
+console.log(square instanceof Square); // true
+console.log(square instanceof Rectangle); // true
 ```
 
 #### `Object.getPrototypeOf()`
